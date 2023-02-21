@@ -50,6 +50,7 @@ def login():
         if row[1] == username and row[5] == password:
 
             access_token = create_access_token(identity=username)
+            return jsonify(access_token=access_token), 200
             return jsonify({"msg": "Giriş Başarılı!"}), 200
             break
         refresh_token = create_refresh_token({"username": username})
@@ -99,7 +100,7 @@ def user_create():
 
 # Kullanıcı bilgileri
 @app.route("/user/<int:id>")
-@jwt_required
+@jwt_required()
 def user_detail(id):
     user = db.get_or_404(Users, id)
     # return render_template("user/detail.html", user=user)
@@ -108,7 +109,7 @@ def user_detail(id):
 
 # Kullanıcı silme
 @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
-@jwt_required
+@jwt_required()
 def user_delete(id):
     user = db.get_or_404(Users, id)
 
@@ -122,7 +123,7 @@ def user_delete(id):
 
 # Kullanıcı güncelleme
 @app.route("/update/<int:id>", methods=["GET", "POST"])
-@jwt_required
+@jwt_required()
 def update_user(id):
     user_to_update = Users.query.get_or_404(id)
     if request.method == "POST":
