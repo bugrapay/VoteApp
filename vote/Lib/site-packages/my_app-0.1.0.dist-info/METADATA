@@ -1,0 +1,43 @@
+Metadata-Version: 2.1
+Name: my-app
+Version: 0.1.0
+Summary: Project template for Django app, using Poetry.
+Home-page: https://github.com/yunojuno/poetry-template
+License: MIT
+Author: YunoJuno
+Author-email: code@yunojuno.com
+Maintainer: YunoJuno
+Maintainer-email: code@yunojuno.com
+Requires-Python: >=3.6,<4.0
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Dist: django (>=2.2,<4.0)
+Project-URL: Documentation, https://github.com/yunojuno/poetry-template
+Project-URL: Repository, https://github.com/yunojuno/poetry-template
+Description-Content-Type: text/markdown
+
+# Poetry Template
+
+Django app template, using `poetry-python` as dependency manager.
+
+This project is a template that can be cloned and re-used for redistributable apps.
+
+It includes the following:
+
+* `poetry` for dependency management
+* `isort`, `black`, `pylint` and `flake8` linting
+* `pre-commit` to run linting
+* `mypy` for type checking
+* `tox` and `travis` for builds and CI
+
+There are default config files for the linting and mypy.
+
