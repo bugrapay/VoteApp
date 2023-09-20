@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, redirect, url_for, render_template, current_app
-from flask_jwt_extended import create_access_token, JWTManager, create_refresh_token, jwt_required
+from flask_jwt_extended import create_access_token, JWTManager, create_refresh_token, jwt_required, get_jwt_identity
 from flask_sqlalchemy import SQLAlchemy
 from email.message import EmailMessage
 from sqlalchemy import create_engine
@@ -130,8 +130,9 @@ def user_delete(id):
     if request.method == "POST":
         db.session.delete(user)
         db.session.commit()
+        return jsonify({"msg": "Kullanıcı Silme Başarılı!"}), 200
         return redirect(url_for("user_list"))
-
+    
     return render_template("user/delete.html", user=user)
 
 
@@ -155,11 +156,30 @@ def update_user(id):
     return
 
 
-#takip etme
+#takip etme1
 @app.route('/users/<int:user_id>/follow', methods=['POST'])
+@jwt_required
 def follow_user(user_id):
     # get the user who is following (e.g. from the authentication token)
     follower = get_current_user()
+    
+    # get the user who is being followed
+    followed = Users.query.get(user_id)
+    
+    # create a new relationship in the database
+    follower.followed.append(followed)
+    db.session.commit()
+    
+    # return a response indicating success
+    return jsonify({'message': f'You are now following {followed.username}!'})
+
+#takip etme2
+@app.route('/users/<int:user_id>/followw', methods=['POST'])
+@jwt_required()
+def follow_user(user_id):
+    # get the user who is following (e.g. from the authentication token)
+    follower_id = get_current_user()
+    follower = Users.query.get(follower_id)
     
     # get the user who is being followed
     followed = Users.query.get(user_id)
@@ -190,23 +210,13 @@ def unfollow_user(user_id):
 
 
 
+@jwt_required()
 def get_current_user():
-    # Get the JWT token from the request header
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
+    current_user_id = get_jwt_identity()
+    current_user = Users.query.get(current_user_id)
+    if not current_user:
         return None
-    token = auth_header.split(' ')[1]
-
-    # Decode the JWT token to get the user ID
-    try:
-        payload = jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=['HS256'])
-        user_id = payload['user_id']
-    except jwt.InvalidTokenError:
-        return None
-
-    # Retrieve the user from the database using the user ID
-    user = Users.query.get(user_id)
-    return user
+    return current_user
 
 
 
